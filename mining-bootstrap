@@ -7,7 +7,7 @@ ATIPRESENT=`lspci | grep VGA | grep -c 'ATI Technologies Inc'`
 AMDSDKNAM="AMD-APP-SDK-v2.9-lnx64.tgz"
 AMDSDKSUM="24ca89856d41aa82dea8370b7a24fb4e"
 AMDDRVNAM="amd-catalyst-13.12-linux-x86.x86_64"
-AMDDRVSUM="2418a94b699fe8fdec01ccd32f684c90"
+AMDDRVSUM="6b16cad1acf7aa4851fa00e43b9e3c1f"
 
 # Display yellow warning output
 function cwarn() {
@@ -125,35 +125,35 @@ do
 			else
 				cerr "File is corrupt, redownloading..."
 				rm -f amd-catalyst*
-				wget --referer "http://support.amd.com/en-us/download/desktop?os=Linux%20x86_64" "http://www2.ati.com/drivers/linux/$AMDDRVNAM.zip"
+				wget https://dl.dropboxusercontent.com/s/1ickkwdiu5669o0/amd-catalyst-13.12-linux-x86.x86_64.zip
 				check_status $?
 			fi
 		else
 			cinfo "Downloading and installing AMD driver from AMD website..."
-			wget --referer "http://support.amd.com/en-us/download/desktop?os=Linux%20x86_64" "http://www2.ati.com/drivers/linux/$AMDDRVNAM.zip"
+			wget https://dl.dropboxusercontent.com/s/1ickkwdiu5669o0/amd-catalyst-13.12-linux-x86.x86_64.zip
 			check_status $?
 		fi
 		unzip -o $AMDDRVNAM.zip
 		check_status $?
 		chmod +x $AMDDRVNAM.run
 		check_status $?
-		echo '--- 13.12/common/lib/modules/fglrx/build_mod/kcl_acpi.c	2013-12-17 20:05:35.000000000 +0100
-+++ 13.12/common/lib/modules/fglrx/build_mod/kcl_acpi.c	2013-12-19 18:40:18.386568588 +0100
-@@ -995,7 +995,11 @@
- #endif
-     {
-         return KCL_ACPI_ERROR;
--    }    
-+    }
-+#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,9,1)
-+    ((acpi_tbl_table_handler)handler)(hdr);
-+#else
-     ((acpi_table_handler)handler)(hdr);
-+#endif
-     return KCL_ACPI_OK;
--}
-+}' > kernel-3.9.1.patch
-		check_status $?
+#		echo '--- 13.12/common/lib/modules/fglrx/build_mod/kcl_acpi.c	2013-12-17 20:05:35.000000000 +0100
+#+++ 13.12/common/lib/modules/fglrx/build_mod/kcl_acpi.c	2013-12-19 18:40:18.386568588 +0100
+#@@ -995,7 +995,11 @@
+# #endif
+#     {
+#         return KCL_ACPI_ERROR;
+##
+#+    }
+#+#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,9,1)
+#+    ((acpi_tbl_table_handler)handler)(hdr);
+#+#else
+#     ((acpi_table_handler)handler)(hdr);
+#+#endif
+#     return KCL_ACPI_OK;
+#-}
+#+}' > kernel-3.9.1.patch
+#		check_status $?
 		if [ -f "fglrx*.deb" ]
 		then
 			rm -f fglrx*.deb
