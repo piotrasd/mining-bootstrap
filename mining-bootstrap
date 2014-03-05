@@ -114,7 +114,7 @@ do
 	read -p "Download latest AMD proprietary drivers from AMD's website? (y/n): " amddownload
 	if [ "$amddownload" == 'y' ] || [ "$amddownload" == 'Y' ]
 	then
-		sudo apt-get -y install curl dkms lib32gcc1 libc6-i386 libqtgui4 devscripts libcurl4-openssl-dev libncurses5-dev libglu1-mesa-dev linux-headers-generic dh-make dh-modaliases execstack
+		sudo apt-get -y install curl dkms lib32gcc1 libc6-i386 libqtgui4 devscripts libcurl4-openssl-dev libncurses5-dev libglu1-mesa-dev dh-make dh-modaliases execstack
 		check_status $?
 		if [ -f $AMDDRVNAM.zip ]
 		then
@@ -137,23 +137,7 @@ do
 		check_status $?
 		chmod +x $AMDDRVNAM.run
 		check_status $?
-#		echo '--- 13.12/common/lib/modules/fglrx/build_mod/kcl_acpi.c	2013-12-17 20:05:35.000000000 +0100
-#+++ 13.12/common/lib/modules/fglrx/build_mod/kcl_acpi.c	2013-12-19 18:40:18.386568588 +0100
-#@@ -995,7 +995,11 @@
-# #endif
-#     {
-#         return KCL_ACPI_ERROR;
-##
-#+    }
-#+#if LINUX_VERSION_CODE >= KERNEL_VERSION(3,9,1)
-#+    ((acpi_tbl_table_handler)handler)(hdr);
-#+#else
-#     ((acpi_table_handler)handler)(hdr);
-#+#endif
-#     return KCL_ACPI_OK;
-#-}
-#+}' > kernel-3.9.1.patch
-#		check_status $?
+
 		if [ -f "fglrx*.deb" ]
 		then
 			rm -f fglrx*.deb
